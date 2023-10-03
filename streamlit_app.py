@@ -8,8 +8,8 @@ import streamlit_ as folium
 
 
 st.title('Tecnopolis!')
-
-
+import streamlit as st
+import folium
 
 # Sample data (latitude, longitude, pollution value)
 pollution_data = [(37.7749, -122.4194, 50),
