@@ -1,1 +1,1 @@
-# hackathon_aveiro_tecnopolis
+# tecnopolis
