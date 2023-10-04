@@ -6,16 +6,27 @@ from datetime import time as dt_time
 
 st.title('Tecnopolis!')
 
+# dt_string = "12/11/2018 09:15:32"
 
+# Considering date is in dd/mm/yyyy format
+# dt_object1 = datetime.strptime(dt_string, "%d/%m/%Y %H:%M:%S")
+
+min_datetime = datetime.strptime('00:00', '%H:%M')
+max_datetime = datetime.strptime('23:45', '%H:%M')
+
+min_date_day = datetime.strptime('08/03/2023', "%d/%m/%Y")
+max_date_day = datetime.strptime('17/09/2023', "%d/%m/%Y")
 
 # Criar slider de data 
 reading_date = st.slider(
     "Data da Leitura",
-    #min date
-    #max date
-    value=datetime(2020, 1, 1),
+    min_value=min_date_day,
+    max_value=max_date_day,
+    value=datetime(2023, 6 ,6),
     format="DD/MMMM/YYYY")
-st.write("Data selecionada:", reading_date)
+
+reading_date_formatted = reading_date.strftime("%d/%b/%Y")
+st.write("Data selecionada:", reading_date_formatted)
 
 min_datetime = datetime.strptime('00:00', '%H:%M')
 max_datetime = datetime.strptime('23:45', '%H:%M')
@@ -26,12 +37,16 @@ reading_time = st.slider(
     "Horário da Leitura:",
     min_value=min_datetime,
     max_value=max_datetime,
-    value=dt_time(9, 30),
+    # value=dt_time(9, 30),
+    value = datetime.strptime('16:20', '%H:%M'),
     # value=(min_datetime, max_datetime),
     step=timedelta(minutes=15),
-    format="hh:mm"
+    format="HH:MM"
     )
-st.write("Hora selecionada:", reading_time)
+reading_time_formatted = reading_time.strftime("%H:%M")
+st.write("Hora selecionada:", reading_time_formatted )
+
+st.write("data hora selecionada: ",reading_date_formatted,reading_time_formatted) 
 
 # Sample data (latitude, longitude, pollution value)
 pollution_data = [(40.64435, -8.64066, 50),
