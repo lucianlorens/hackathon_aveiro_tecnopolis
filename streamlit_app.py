@@ -50,82 +50,105 @@ selected_datetime = parsed_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
 
 # Sample data (latitude, longitude, pollution value)
-pollution_data = [(40.640869210794435, -8.654079269311524, 50),
-                  (40.638073976301875, -8.643864619150884, 70),
-                  # Add more data as needed
-                 ]
+# pollution_data = [(40.640869210794435, -8.654079269311524, 50),
+#                   (40.638073976301875, -8.643864619150884, 70),
+#                   # Add more data as needed
+#                  ]
 
 df_gold = pd.read_csv('df_gold.csv')
-# filtered_df = df_gold[ (df_gold['timestamp'] == selected_datetime) ]
 
 def find_rows_by_timestamp(df, timestamp):
-    """
-    Find all rows in the DataFrame that match the given timestamp.
-    
-    Parameters:
-        df (pd.DataFrame): The DataFrame to search.
-        timestamp (str): The timestamp to search for (in the format 'YYYY-MM-DDTHH:MM:SS').
-    
-    Returns:
-        pd.DataFrame: DataFrame containing rows that match the timestamp.
-    """
-    # Convert timestamp to datetime object
-    # timestamp = pd.to_datetime(timestamp)
-    
-    # Filter the DataFrame based on the timestamp
     filtered_df = df[df['timestamp'] == timestamp]
     
     return filtered_df
 
 filtered_df = find_rows_by_timestamp(df_gold, selected_datetime)
 
-
-
 # Display the filtered DataFrame
 st.write('### Filtered Data Based on Selected Time Range:')
 st.write(filtered_df)
 
 # Function to create a map using Folium
+data = filtered_df
 
+m = folium.Map(location=[data['latitude'].mean(), data['longitude'].mean()], zoom_start=13)
 
-def create_map(data):
-    map = folium.Map(location=[40.64435, -8.64066], zoom_start=12)
+# Function to assign marker color based on pollution level
+def get_marker_color(pollution_value):
+    if pollution_value <= 50:
+        return 'green'
+    elif pollution_value <= 100:
+        return 'yellow'
+    elif pollution_value <= 150:
+        return 'orange'
+    else:
+        return 'red'
+
+for index, row in data.iterrows():
+    folium.CircleMarker(
+        location=[row['latitude'], row['longitude']],
+        radius=5 * row['carbon_dioxide (ppm)'] / 100,  # Adjust marker size based on CO2 level
+        # color=get_marker_color(row['carbon_dioxide (ppm)']),  # Color based on CO2 level
+        color= 'red ',  # Color based on CO2 level
+        fill=True,
+        # fill_color=get_marker_color(row['carbon_dioxide (ppm)']),
+        fill_color='red',
+        fill_opacity=0.6
+    ).add_to(m)
+
+st_folium(m, width=800)
+
+#
+
+# def create_map(dataframe):
+#     map = folium.Map(location=[40.64435, -8.64066], zoom_start=12)    
+#     # query the data from date
+#     # add points according to filters. 
+
+#     for row in dataframe:
+#         print(type(row))
+#         print(row)
+#         print("========")
+#         lat = row['latitude']
+#         lon = row['longitude']
+#         pollution_value = row['carbon_monoxide (ug/m3)']
+#         # lat, lon, pollution_value = item
+#         print(lat)
+#         print(lon)
+#         print(pollution_value)
+
+#         folium.CircleMarker(
+#             label='Monóxido de Carbono',
+#             location=(lat, lon),
+#             radius = pollution_value / 10,  # Adjust marker size based on pollution value
+#             color = 'red',
+#             fill = True,
+#             # vermelho para Monóxido de Carbono, Azul para Dióxido de Carbono,
+#             # verde para nitrogênio
+#             # pontilhado para poeira
+
+#             fill_color='red', 
+#             fill_opacity=0.3
+
+#         ).add_to(map)
     
-    # query the data from date
+#     # if mono_carb check
+#     # if diox_carb check
+#     # if diox_nitro check
 
-    # add points according to filters. 
-
-    for item in data:
-        lat, lon, pollution_value = item
-        folium.CircleMarker(
-            location=(lat, lon),
-            radius = pollution_value / 10,  # Adjust marker size based on pollution value
-            color = 'red',
-            fill = True,
-            # vermelho para Monóxido de Carbono, Azul para Dióxido de Carbono,
-            # verde para nitrogênio
-            # pontilhado para poeira
-
-            fill_color='red', 
-            fill_opacity=0.3
-
-        ).add_to(map)
-    
-    # if mono_carb check
-    # if diox_carb check
-    # if diox_nitro check
-
-    return map
+#     return map
 
 
 
-### create 3D map
+# ### create 3D map
 
-# Display the map
-st.write('Pollution Map')
-map = create_map(pollution_data)
-# folium_static(map)  # Using folium_static to display Folium map in Streamlit
-st_folium(map, width=800)
+# # Display the map
+# st.write('Pollution Map')
+# map = create_map(filtered_df)
+# # folium_static(map)  # Using folium_static to display Folium map in Streamlit
+# st_folium(map, width=800)
+
+# =====
 
 
 import pandas as pd
