@@ -1,27 +1,18 @@
-# from matplotlib import container
-# import folium
 import streamlit as st
-# import pandas as pd
-
-# import util as util
-# import streamlit_folium as folium
-
 
 st.title('Tecnopolis!')
-import streamlit as st
-import folium
 
 from streamlit_folium import st_folium
 
 # Sample data (latitude, longitude, pollution value)
-pollution_data = [(37.7749, -122.4194, 50),
-                  (37.7749, -122.4194, 70),
+pollution_data = [(40.64435, -8.64066, 50),
+                  (40.64435, -8.64066, 70),
                   # Add more data as needed
                  ]
 
 # Function to create a map using Folium
 def create_map(data):
-    map = folium.Map(location=[37.7749, -122.4194], zoom_start=12)
+    map = folium.Map(location=[40.64435, -8.64066], zoom_start=12)
     
     for item in data:
         lat, lon, pollution_value = item
