@@ -4,7 +4,7 @@ import streamlit as st
 # import pandas as pd
 
 # import util as util
-import streamlit_folium as folium
+# import streamlit_folium as folium
 
 
 st.title('Tecnopolis!')
