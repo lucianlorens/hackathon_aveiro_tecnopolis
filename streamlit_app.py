@@ -1,15 +1,14 @@
 import streamlit as st
 from streamlit_folium import st_folium
 import folium
-from datetime import datetime, timedelta
-from datetime import time as dt_time
+# from datetime import datetime, timedelta
+from datetime import *
+# from datetime import time as dt_time
+import pandas as pd
 
 st.title('Tecnopolis!')
-
-# dt_string = "12/11/2018 09:15:32"
-
-# Considering date is in dd/mm/yyyy format
-# dt_object1 = datetime.strptime(dt_string, "%d/%m/%Y %H:%M:%S")
+st.write('This application displays pollution data on an interactive map.')
+st.write('Watch the city breathe.')
 
 min_datetime = datetime.strptime('00:00', '%H:%M')
 max_datetime = datetime.strptime('23:45', '%H:%M')
@@ -22,7 +21,7 @@ reading_date = st.slider(
     "Data da Leitura",
     min_value=min_date_day,
     max_value=max_date_day,
-    value=datetime(2023, 6 ,6),
+    value= datetime(2023, 6 ,6),
     format="DD/MMMM/YYYY")
 
 reading_date_formatted = reading_date.strftime("%d/%b/%Y")
@@ -39,6 +38,7 @@ reading_time = st.slider(
     max_value=max_datetime,
     # value=dt_time(9, 30),
     value = datetime.strptime('16:20', '%H:%M'),
+    # value = datetime.time('16:20', '%H:%M'),
     # value=(min_datetime, max_datetime),
     step=timedelta(minutes=15),
     format="HH:MM"
@@ -54,10 +54,28 @@ pollution_data = [(40.64435, -8.64066, 50),
                   # Add more data as needed
                  ]
 
+df = pd.read_csv('air_biblioteca_municipal.csv')
+
+selected_datetime = reading_time + reading_date
+
+time.mktime(datetime.datetime.strptime(s, "%d/%m/%Y").timetuple())
+
+
+filtered_df = df[(df['timestamp'] == selected_datetime)]
+
+# Display the filtered DataFrame
+st.write('### Filtered Data Based on Selected Time Range:')
+st.write(filtered_df)
+
 # Function to create a map using Folium
+
+
+
 def create_map(data):
     map = folium.Map(location=[40.64435, -8.64066], zoom_start=12)
     
+    # query the data from date
+
     # add points according to filters. 
 
     for item in data:
@@ -79,8 +97,8 @@ def create_map(data):
     return map
 
 # Title and description of the application
-st.title('Pollution Data Visualization')
-st.write('This application displays pollution data on an interactive map.')
+
+
 
 # Display the map
 st.write('Pollution Map')
