@@ -22,6 +22,7 @@ reading_date = st.slider(
     min_value=min_date_day,
     max_value=max_date_day,
     value= datetime(2023, 6 ,6),
+    step=timedelta(days=1),
     format="DD/MMMM/YYYY")
 
 reading_date_formatted = reading_date.strftime("%d/%b/%Y")
@@ -36,30 +37,26 @@ reading_time = st.slider(
     "Horário da Leitura:",
     min_value=min_datetime,
     max_value=max_datetime,
-    # value=dt_time(9, 30),
-    value = datetime.strptime('16:20', '%H:%M'),
-    # value = datetime.time('16:20', '%H:%M'),
-    # value=(min_datetime, max_datetime),
+    value = datetime.strptime('15:15', '%H:%M'),
     step=timedelta(minutes=15),
     format="HH:MM"
     )
 reading_time_formatted = reading_time.strftime("%H:%M")
 st.write("Hora selecionada:", reading_time_formatted )
 
-st.write("data hora selecionada: ",reading_date_formatted,reading_time_formatted) 
+st.write("data hora selecionada: ", reading_date_formatted,reading_time_formatted) 
+string_date = str(reading_date_formatted + " " +reading_time_formatted)
+parsed_date = datetime.strptime(string_date, "%d/%b/%Y %H:%M")
+selected_datetime = parsed_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
 
 # Sample data (latitude, longitude, pollution value)
-pollution_data = [(40.64435, -8.64066, 50),
-                  (40.64435, -8.64066, 70),
+pollution_data = [(40.640869210794435, -8.654079269311524, 50),
+                  (40.638073976301875, -8.643864619150884, 70),
                   # Add more data as needed
                  ]
 
 df = pd.read_csv('air_biblioteca_municipal.csv')
-
-selected_datetime = reading_time + reading_date
-
-time.mktime(datetime.datetime.strptime(s, "%d/%m/%Y").timetuple())
-
 
 filtered_df = df[(df['timestamp'] == selected_datetime)]
 
@@ -82,18 +79,22 @@ def create_map(data):
         lat, lon, pollution_value = item
         folium.CircleMarker(
             location=(lat, lon),
-            radius=pollution_value / 10,  # Adjust marker size based on pollution value
-            color='red',
-            fill=True,
+            radius = pollution_value / 10,  # Adjust marker size based on pollution value
+            color = 'red',
+            fill = True,
             # vermelho para Monóxido de Carbono, Azul para Dióxido de Carbono,
             # verde para nitrogênio
             # pontilhado para poeira
 
             fill_color='red', 
-            fill_opacity=0.6
+            fill_opacity=0.3
 
         ).add_to(map)
     
+    # if mono_carb check
+    # if diox_carb check
+    # if diox_nitro check
+
     return map
 
 # Title and description of the application
