@@ -11,6 +11,8 @@ st.title('Tecnopolis!')
 import streamlit as st
 import folium
 
+from streamlit_folium import st_folium
+
 # Sample data (latitude, longitude, pollution value)
 pollution_data = [(37.7749, -122.4194, 50),
                   (37.7749, -122.4194, 70),
@@ -41,4 +43,6 @@ st.write('This application displays pollution data on an interactive map.')
 # Display the map
 st.write('Pollution Map')
 map = create_map(pollution_data)
-folium_static(map)  # Using folium_static to display Folium map in Streamlit
+# folium_static(map)  # Using folium_static to display Folium map in Streamlit
+st_folium(map, width=800)
+
