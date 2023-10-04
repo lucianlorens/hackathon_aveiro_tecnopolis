@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_folium import st_folium
 import folium
-
+import matplotlib.pyplot as plt
 from datetime import *
 
 import pandas as pd
@@ -107,50 +107,52 @@ for index, row in data.iterrows():
 
 st_folium(m, width=800)
 
-# ### create 3D map
 
-# # Display the map
-# st.write('Pollution Map')
-# map = create_map(filtered_df)
-# # folium_static(map)  # Using folium_static to display Folium map in Streamlit
-# st_folium(map, width=800)
+### BAR CHART 
+# data = data.dropna(subset=['carbon_dioxide (ppm)', 'carbon_monoxide (ug/m3)', 'nitrogen_dioxide (ug/m3)'])
+
+# # Select relevant columns
+# pollution_data = data[['carbon_dioxide (ppm)', 'carbon_monoxide (ug/m3)', 'nitrogen_dioxide (ug/m3)']]
+
+# # Calculate the mean pollution values
+# mean_pollution = pollution_data.mean()
+
+# # Create a bar graph
+# plt.figure(figsize=(10, 6))
+# mean_pollution.plot(kind='bar', color=['blue', 'green', 'red'])
+# plt.title('Mean Pollution Levels')
+# plt.xlabel('Pollutant')
+# plt.ylabel('Mean Level')
+# plt.xticks(rotation=0)
+# # st.pyplot(mean_pollution)
+
+# import streamlit as st
+# import pandas as pd
+# import matplotlib.pyplot as plt
+
+# # Load the data from the provided CSV
+# # data = pd.read_csv('path/to/your/csv.csv')
+
+# # Filter out rows with missing pollution data
+# data = data.dropna(subset=['carbon_dioxide (ppm)', 'carbon_monoxide (ug/m3)', 'nitrogen_dioxide (ug/m3)'])
+
+# # Select relevant columns
+# pollution_data = data[['carbon_dioxide (ppm)', 'carbon_monoxide (ug/m3)', 'nitrogen_dioxide (ug/m3)']]
+
+# # Calculate the mean pollution values
+# mean_pollution = pollution_data.mean()
+
+# # Display the bar graph using Streamlit
+# st.bar_chart(mean_pollution)
+
+# # Optionally, display the numerical values as well
+# st.write('Mean Pollution Levels:')
+# st.write(mean_pollution)
+
+### create 3D map
 
 # =====
 
-
-# import pandas as pd
-# import pydeck as pdk
-# import streamlit as st
-
-# # Load the data from the provided CSV
-# data = pd.read_csv('df_gold.csv')
-
-# # Filter out rows with missing latitude or longitude
-# data = data.dropna(subset=['latitude', 'longitude'])
-
-# # Create a Pydeck heatmap layer
-# heatmap_layer = pdk.Layer(
-#     "HeatmapLayer",
-#     data,
-#     get_position=['longitude', 'latitude'],
-#     aggregation='"MEAN"',
-#     get_weight='carbon_dioxide (ppm)'
-# )
-
-# # Set the initial viewpoint for the map
-# view_state = pdk.ViewState(
-#     latitude=data['latitude'].mean(),
-#     longitude=data['longitude'].mean(),
-#     zoom=11,
-#     pitch=0
-# )
-
-# # Create the Pydeck deck
-# deck = pdk.Deck(
-#     map_style='mapbox://styles/mapbox/light-v9',
-#     initial_view_state=view_state,
-#     layers=[heatmap_layer]
-# )
-
-# # Render the map using Streamlit
-# st.pydeck_chart(deck)
+import util.map_plotter as map_plotter
+map_plotter.plot_3D_scatterplot(data)
+map_plotter.heat_map(data)
