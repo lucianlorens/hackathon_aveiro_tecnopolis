@@ -1,20 +1,19 @@
 import streamlit as st
 from streamlit_folium import st_folium
 import folium
-# from datetime import datetime, timedelta
+
 from datetime import *
-# from datetime import time as dt_time
+
 import pandas as pd
 
 st.title('Tecnopolis!')
-st.write('This application displays pollution data on an interactive map.')
 st.write('Watch the city breathe.')
-
-min_datetime = datetime.strptime('00:00', '%H:%M')
-max_datetime = datetime.strptime('23:45', '%H:%M')
 
 min_date_day = datetime.strptime('08/03/2023', "%d/%m/%Y")
 max_date_day = datetime.strptime('17/09/2023', "%d/%m/%Y")
+
+min_datetime = datetime.strptime('00:00', '%H:%M')
+max_datetime = datetime.strptime('23:45', '%H:%M')
 
 # Criar slider de data 
 reading_date = st.slider(
@@ -44,7 +43,7 @@ reading_time = st.slider(
 reading_time_formatted = reading_time.strftime("%H:%M")
 st.write("Hora selecionada:", reading_time_formatted )
 
-st.write("data hora selecionada: ", reading_date_formatted,reading_time_formatted) 
+# st.write("data hora selecionada: ", reading_date_formatted,reading_time_formatted) 
 string_date = str(reading_date_formatted + " " +reading_time_formatted)
 parsed_date = datetime.strptime(string_date, "%d/%b/%Y %H:%M")
 selected_datetime = parsed_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
@@ -57,8 +56,30 @@ pollution_data = [(40.640869210794435, -8.654079269311524, 50),
                  ]
 
 df_gold = pd.read_csv('df_gold.csv')
+# filtered_df = df_gold[ (df_gold['timestamp'] == selected_datetime) ]
 
-filtered_df = df_gold[(df_gold['timestamp'] == selected_datetime)]
+def find_rows_by_timestamp(df, timestamp):
+    """
+    Find all rows in the DataFrame that match the given timestamp.
+    
+    Parameters:
+        df (pd.DataFrame): The DataFrame to search.
+        timestamp (str): The timestamp to search for (in the format 'YYYY-MM-DDTHH:MM:SS').
+    
+    Returns:
+        pd.DataFrame: DataFrame containing rows that match the timestamp.
+    """
+    # Convert timestamp to datetime object
+    # timestamp = pd.to_datetime(timestamp)
+    
+    # Filter the DataFrame based on the timestamp
+    filtered_df = df[df['timestamp'] == timestamp]
+    
+    return filtered_df
+
+filtered_df = find_rows_by_timestamp(df_gold, selected_datetime)
+
+
 
 # Display the filtered DataFrame
 st.write('### Filtered Data Based on Selected Time Range:')
@@ -96,9 +117,9 @@ def create_map(data):
 
     return map
 
-# Title and description of the application
 
 
+### create 3D map
 
 # Display the map
 st.write('Pollution Map')
@@ -107,4 +128,39 @@ map = create_map(pollution_data)
 st_folium(map, width=800)
 
 
-# criar checkbox de quais dados vão ser processados ? 
+import pandas as pd
+import pydeck as pdk
+import streamlit as st
+
+# Load the data from the provided CSV
+data = pd.read_csv('df_gold.csv')
+
+# Filter out rows with missing latitude or longitude
+data = data.dropna(subset=['latitude', 'longitude'])
+
+# Create a Pydeck heatmap layer
+heatmap_layer = pdk.Layer(
+    "HeatmapLayer",
+    data,
+    get_position=['longitude', 'latitude'],
+    aggregation='"MEAN"',
+    get_weight='carbon_dioxide (ppm)'
+)
+
+# Set the initial viewpoint for the map
+view_state = pdk.ViewState(
+    latitude=data['latitude'].mean(),
+    longitude=data['longitude'].mean(),
+    zoom=11,
+    pitch=0
+)
+
+# Create the Pydeck deck
+deck = pdk.Deck(
+    map_style='mapbox://styles/mapbox/light-v9',
+    initial_view_state=view_state,
+    layers=[heatmap_layer]
+)
+
+# Render the map using Streamlit
+st.pydeck_chart(deck)
