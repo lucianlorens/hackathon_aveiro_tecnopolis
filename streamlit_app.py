@@ -6,16 +6,12 @@ from datetime import *
 
 import pandas as pd
 
-st.title('Tecnopolis!')
-st.write('Watch the city breathe.')
-
-min_date_day = datetime.strptime('08/03/2023', "%d/%m/%Y")
-max_date_day = datetime.strptime('17/09/2023', "%d/%m/%Y")
-
-min_datetime = datetime.strptime('00:00', '%H:%M')
-max_datetime = datetime.strptime('23:45', '%H:%M')
+st.title('Tecnopolis')
+st.subheader('Watch the city breathe.')
 
 # Criar slider de data 
+min_date_day = datetime.strptime('08/03/2023', "%d/%m/%Y")
+max_date_day = datetime.strptime('17/09/2023', "%d/%m/%Y")
 reading_date = st.slider(
     "Data da Leitura",
     min_value=min_date_day,
@@ -27,11 +23,10 @@ reading_date = st.slider(
 reading_date_formatted = reading_date.strftime("%d/%b/%Y")
 st.write("Data selecionada:", reading_date_formatted)
 
+# Criar slider de hora
 min_datetime = datetime.strptime('00:00', '%H:%M')
 max_datetime = datetime.strptime('23:45', '%H:%M')
 
-
-# Criar slider de hora
 reading_time = st.slider(
     "Horário da Leitura:",
     min_value=min_datetime,
@@ -47,13 +42,6 @@ st.write("Hora selecionada:", reading_time_formatted )
 string_date = str(reading_date_formatted + " " +reading_time_formatted)
 parsed_date = datetime.strptime(string_date, "%d/%b/%Y %H:%M")
 selected_datetime = parsed_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-
-
-# Sample data (latitude, longitude, pollution value)
-# pollution_data = [(40.640869210794435, -8.654079269311524, 50),
-#                   (40.638073976301875, -8.643864619150884, 70),
-#                   # Add more data as needed
-#                  ]
 
 df_gold = pd.read_csv('df_gold.csv')
 
@@ -122,49 +110,6 @@ for index, row in data.iterrows():
     ).add_to(m)
 
 st_folium(m, width=800)
-
-
-#
-
-# def create_map(dataframe):
-#     map = folium.Map(location=[40.64435, -8.64066], zoom_start=12)    
-#     # query the data from date
-#     # add points according to filters. 
-
-#     for row in dataframe:
-#         print(type(row))
-#         print(row)
-#         print("========")
-#         lat = row['latitude']
-#         lon = row['longitude']
-#         pollution_value = row['carbon_monoxide (ug/m3)']
-#         # lat, lon, pollution_value = item
-#         print(lat)
-#         print(lon)
-#         print(pollution_value)
-
-#         folium.CircleMarker(
-#             label='Monóxido de Carbono',
-#             location=(lat, lon),
-#             radius = pollution_value / 10,  # Adjust marker size based on pollution value
-#             color = 'red',
-#             fill = True,
-#             # vermelho para Monóxido de Carbono, Azul para Dióxido de Carbono,
-#             # verde para nitrogênio
-#             # pontilhado para poeira
-
-#             fill_color='red', 
-#             fill_opacity=0.3
-
-#         ).add_to(map)
-    
-#     # if mono_carb check
-#     # if diox_carb check
-#     # if diox_nitro check
-
-#     return map
-
-
 
 # ### create 3D map
 
