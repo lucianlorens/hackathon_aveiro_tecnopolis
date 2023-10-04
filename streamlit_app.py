@@ -56,16 +56,15 @@ pollution_data = [(40.640869210794435, -8.654079269311524, 50),
                   # Add more data as needed
                  ]
 
-df = pd.read_csv('air_biblioteca_municipal.csv')
+df_gold = pd.read_csv('df_gold.csv')
 
-filtered_df = df[(df['timestamp'] == selected_datetime)]
+filtered_df = df_gold[(df_gold['timestamp'] == selected_datetime)]
 
 # Display the filtered DataFrame
 st.write('### Filtered Data Based on Selected Time Range:')
 st.write(filtered_df)
 
 # Function to create a map using Folium
-
 
 
 def create_map(data):
