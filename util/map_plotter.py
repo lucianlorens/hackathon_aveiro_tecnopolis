@@ -160,11 +160,8 @@ def bar_chart(data):
     plt.xlabel('Pollutant')
     plt.ylabel('Mean Level')
     plt.xticks(rotation=0)
-    # st.pyplot(mean_pollution)
+    st.pyplot(mean_pollution)
 
-    import streamlit as st
-    import pandas as pd
-    import matplotlib.pyplot as plt
 
     # Load the data from the provided CSV
     # data = pd.read_csv('path/to/your/csv.csv')

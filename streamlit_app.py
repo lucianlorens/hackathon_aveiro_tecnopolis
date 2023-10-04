@@ -59,6 +59,6 @@ data = filtered_df
 
 
 map_plotter.plot_interactivemap(data)
-map_plotter.plot_3D_scatterplot(data)
+# map_plotter.plot_3D_scatterplot(data)
 map_plotter.heat_map(data)
-map_plotter.bar_chart(data)
+# map_plotter.bar_chart(data)
