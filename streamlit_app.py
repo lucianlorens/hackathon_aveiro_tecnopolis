@@ -52,10 +52,6 @@ def find_rows_by_timestamp(df, timestamp):
 
 filtered_df = find_rows_by_timestamp(df_gold, selected_datetime)
 
-# Display the filtered DataFrame
-st.write('### Filtered Data Based on Selected Time Range:')
-st.write(filtered_df)
-
 # Function to create a map using Folium
 data = filtered_df
 
