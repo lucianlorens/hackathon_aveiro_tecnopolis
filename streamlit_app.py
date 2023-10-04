@@ -71,7 +71,7 @@ st.write(filtered_df)
 # Function to create a map using Folium
 data = filtered_df
 
-m = folium.Map(location=[data['latitude'].mean(), data['longitude'].mean()], zoom_start=13)
+m = folium.Map(location=[data['latitude'].mean(), data['longitude'].mean()], zoom_start=15)
 
 # Function to assign marker color based on pollution level
 def get_marker_color(pollution_value):
@@ -85,18 +85,44 @@ def get_marker_color(pollution_value):
         return 'red'
 
 for index, row in data.iterrows():
+
+    #add carbon dioxide
     folium.CircleMarker(
         location=[row['latitude'], row['longitude']],
         radius=5 * row['carbon_dioxide (ppm)'] / 100,  # Adjust marker size based on CO2 level
+        # color=get_marker_color(row['carbon_dioxide (ppm)']),  # Color based on CO2 level
+        color= 'blue ',  # Color based on CO2 level
+        fill=True,
+        # fill_color=get_marker_color(row['carbon_dioxide (ppm)']),
+        fill_color='blue',
+        fill_opacity=0.2
+    ).add_to(m)
+
+    folium.CircleMarker(
+        location=[row['latitude'], row['longitude']],
+        radius=5 * row['carbon_monoxide (ug/m3)'] / 100,  # Adjust marker size based on CO2 level
         # color=get_marker_color(row['carbon_dioxide (ppm)']),  # Color based on CO2 level
         color= 'red ',  # Color based on CO2 level
         fill=True,
         # fill_color=get_marker_color(row['carbon_dioxide (ppm)']),
         fill_color='red',
-        fill_opacity=0.6
+        fill_opacity=0.2
+    ).add_to(m)
+
+
+    folium.CircleMarker(
+        location=[row['latitude'], row['longitude']],
+        radius=5 * row['nitrogen_dioxide (ug/m3)'] / 100,  # Adjust marker size based on CO2 level
+        # color=get_marker_color(row['carbon_dioxide (ppm)']),  # Color based on CO2 level
+        color= 'green ',  # Color based on CO2 level
+        fill=True,
+        # fill_color=get_marker_color(row['carbon_dioxide (ppm)']),
+        fill_color='green',
+        fill_opacity=0.2
     ).add_to(m)
 
 st_folium(m, width=800)
+
 
 #
 
@@ -151,39 +177,39 @@ st_folium(m, width=800)
 # =====
 
 
-import pandas as pd
-import pydeck as pdk
-import streamlit as st
+# import pandas as pd
+# import pydeck as pdk
+# import streamlit as st
 
-# Load the data from the provided CSV
-data = pd.read_csv('df_gold.csv')
+# # Load the data from the provided CSV
+# data = pd.read_csv('df_gold.csv')
 
-# Filter out rows with missing latitude or longitude
-data = data.dropna(subset=['latitude', 'longitude'])
+# # Filter out rows with missing latitude or longitude
+# data = data.dropna(subset=['latitude', 'longitude'])
 
-# Create a Pydeck heatmap layer
-heatmap_layer = pdk.Layer(
-    "HeatmapLayer",
-    data,
-    get_position=['longitude', 'latitude'],
-    aggregation='"MEAN"',
-    get_weight='carbon_dioxide (ppm)'
-)
+# # Create a Pydeck heatmap layer
+# heatmap_layer = pdk.Layer(
+#     "HeatmapLayer",
+#     data,
+#     get_position=['longitude', 'latitude'],
+#     aggregation='"MEAN"',
+#     get_weight='carbon_dioxide (ppm)'
+# )
 
-# Set the initial viewpoint for the map
-view_state = pdk.ViewState(
-    latitude=data['latitude'].mean(),
-    longitude=data['longitude'].mean(),
-    zoom=11,
-    pitch=0
-)
+# # Set the initial viewpoint for the map
+# view_state = pdk.ViewState(
+#     latitude=data['latitude'].mean(),
+#     longitude=data['longitude'].mean(),
+#     zoom=11,
+#     pitch=0
+# )
 
-# Create the Pydeck deck
-deck = pdk.Deck(
-    map_style='mapbox://styles/mapbox/light-v9',
-    initial_view_state=view_state,
-    layers=[heatmap_layer]
-)
+# # Create the Pydeck deck
+# deck = pdk.Deck(
+#     map_style='mapbox://styles/mapbox/light-v9',
+#     initial_view_state=view_state,
+#     layers=[heatmap_layer]
+# )
 
-# Render the map using Streamlit
-st.pydeck_chart(deck)
+# # Render the map using Streamlit
+# st.pydeck_chart(deck)
